@@ -57,7 +57,7 @@ function App() {
 }
 
 export default App;
-
+// https://drive.google.com/file/d/1z4s_GuENckW1JlOFC07IQPDmBR7fEVZh/view?usp=sharing
 // CoreConcept 컴포넌트 사용:
 
 // 첫 번째 항목:
