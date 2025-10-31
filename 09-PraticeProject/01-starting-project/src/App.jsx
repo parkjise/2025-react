@@ -3,18 +3,47 @@ import NewProject from "./components/NewProject";
 import NoProjectSelected from "./components/NoProjectSelected";
 import ProjectsSideBar from "./components/ProjectsSideBar";
 import SelectedProject from "./components/SelectedProject";
+import Tasks from "./components/Tasks";
 
 function App() {
 	const [projectsState, setProjectsState] = useState({
 		selectedProjectId: undefined,
 		projects: [],
+		tasks:[]
 	});
+
+	const handleAddTask = (text) => {
+		setProjectsState((prevState) => {
+			const taskId = Math.random();
+			const newTask = {
+				text:text,
+				projectId:prevState.selectedProjectId,
+				id: taskId,
+			};
+			return {
+				...prevState,
+				tasks: [newTask,...prevState.tasks],
+				// selectedProjectId: undefined,
+
+			};
+		});
+	}
+
+	const handleDeleteTask = (id) => {
+		setProjectsState((prevState) => {
+			return {
+				...prevState,
+				selectedProjectId: undefined,
+				tasks:prevState.tasks.filter((tasks) => tasks.id !== id)
+			};
+		});
+	}
 
 	const handleSelectProject = (id) => {
 		setProjectsState((prevState) => {
 			return {
 				...prevState,
-				selectedProjectId: null,
+				selectedProjectId: id,
 			};
 		});
 	};
@@ -42,21 +71,32 @@ function App() {
 			const projectId = Math.random();
 			const newProject = {
 				...projectData,
-				selectedProjectId: undefined,
 				id: projectId,
 			};
 			return {
 				...prevState,
 				projects: [...prevState.projects, newProject],
+				selectedProjectId: undefined,
+
 			};
 		});
 	};
+
+	const handleDeleteProject = () => {
+		setProjectsState((prevState) => {
+			return {
+				...prevState,
+				selectedProjectId: undefined,
+				projects:prevState.projects.filter((project) => project.id !== prevState.selectedProjectId)
+			};
+		});
+	}
 
 	const selectedProject = projectsState.projects.find(
 		(project) => project.id === projectsState.selectedProjectId
 	);
 
-	let content = <SelectedProject project={selectedProject} />;
+	let content = <SelectedProject project={selectedProject} onDelete={handleDeleteProject} onAddTask={handleAddTask} onDeleteTask={handleDeleteTask} tasks={projectsState.tasks}/>;
 
 	if (projectsState.selectedProjectId === null) {
 		content = (
